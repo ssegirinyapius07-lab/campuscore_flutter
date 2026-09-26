@@ -57,11 +57,11 @@ class _LoginScreenState extends State<LoginScreen> {
     showDialog(context: context, barrierDismissible: false, builder: (_) => AlertDialog(
       title: const Text('Change Default Password'),
       content: const Column(mainAxisSize: MainAxisSize.min, children: [
-        const Text('Your default password is your registration number. Please change it before proceeding.', style: TextStyle(fontSize: 13)),
-        const SizedBox(height: 12),
-        const TextField(decoration: InputDecoration(labelText: 'New Password', border: OutlineInputBorder()), obscureText: true),
-        const SizedBox(height: 12),
-        const TextField(decoration: InputDecoration(labelText: 'Confirm Password', border: OutlineInputBorder()), obscureText: true),
+        Text('Your default password is your registration number. Please change it before proceeding.', style: TextStyle(fontSize: 13)),
+        SizedBox(height: 12),
+        TextField(decoration: InputDecoration(labelText: 'New Password', border: OutlineInputBorder()), obscureText: true),
+        SizedBox(height: 12),
+        TextField(decoration: InputDecoration(labelText: 'Confirm Password', border: OutlineInputBorder()), obscureText: true),
       ]),
       actions: [TextButton(onPressed: () => Navigator.pushReplacementNamed(context, '/home'), child: const Text('Update & Continue'))],
     ));
