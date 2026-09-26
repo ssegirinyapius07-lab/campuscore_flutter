@@ -34,6 +34,7 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
   Future<void> _load() async {
     final p = await db.getPrograms();
     final f = await db.getFaculties();
+    if (!mounted) return;
     setState(() {
       programs = p;
       faculties = f;
@@ -141,6 +142,7 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
                           email: emailCtrl.text,
                           parentContact: '+256700000000',
                           classYear: 'Year 2');
+                      if (!mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Added ${s.regNo}')));
                       nameCtrl.clear();
@@ -171,7 +173,9 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
                   child: ElevatedButton(
                       onPressed: () async {
                         await db.loadExampleData();
-                        _load();
+                        if (!mounted) return;
+                        await _load();
+                        if (!mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                             content: Text(
                                 'Loaded example BACS/M/25D/UG/001 format data')));
