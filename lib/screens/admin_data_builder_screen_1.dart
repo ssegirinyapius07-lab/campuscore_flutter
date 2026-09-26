@@ -71,7 +71,7 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
             const SizedBox(height: 12),
             SizedBox(width: double.infinity, height: 52, child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1E1B4B), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), onPressed: () async {
               final s = await db.addStudent(fullName: nameCtrl.text, gender: gender, programCode: program, enrollYear: year, session: session, nationality: nationality, email: emailCtrl.text, parentContact: '+256700000000', classYear: 'Year 2');
-              if (!context.mounted) return;
+              if (!mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added ${s.regNo}')));
               nameCtrl.clear(); emailCtrl.clear();
             }, child: const Text('Add Student - Auto Generate Reg No', style: TextStyle(color: Colors.white)))),
@@ -84,9 +84,9 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
             ...programs.map((p) => ListTile(title: Text('${p.code} - ${p.name}'), subtitle: Text('Faculty: ${p.facultyId}'), tileColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)))),
             const SizedBox(height: 12),
             Row(children: [
-              Expanded(child: ElevatedButton(onPressed: () async { await db.loadExampleData(); if (!context.mounted) return; await _load(); if (!context.mounted) return; ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Loaded example BACS/M/25D/UG/001 format data'))); }, child: const Text('Load Example Data'))),
+              Expanded(child: ElevatedButton(onPressed: () async { await db.loadExampleData(); if (!mounted) return; await _load(); if (!mounted) return; ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Loaded example BACS/M/25D/UG/001 format data'))); }, child: const Text('Load Example Data'))),
               const SizedBox(width: 12),
-              Expanded(child: OutlinedButton(onPressed: (){ showDialog(context: context, builder: (_) => AlertDialog(title: const Text('Add Program'), content: const Column(mainAxisSize: MainAxisSize.min, children: [TextField(decoration: InputDecoration(labelText: 'Code e.g. BACS')), TextField(decoration: InputDecoration(labelText: 'Name'))]), actions: [TextButton(onPressed: ()=>Navigator.pop(context), child: const Text('Add'))])); }, child: const Text('Add Program')))
+              Expanded(child: OutlinedButton(onPressed: (){ showDialog(context: context, builder: (_) => AlertDialog(title: const Text('Add Program'), content: const Column(mainAxisSize: MainAxisSize.min, children: [const TextField(decoration: const InputDecoration(labelText: 'Code e.g. BACS')), const TextField(decoration: const InputDecoration(labelText: 'Name'))]), actions: [TextButton(onPressed: ()=>Navigator.pop(context), child: const Text('Add'))])); }, child: const Text('Add Program')))
             ]),
           ],
         ),
