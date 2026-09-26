@@ -86,7 +86,7 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
                               fontWeight: FontWeight.bold, fontSize: 12)),
                       SizedBox(height: 4),
                       Text(
-                          'The generated registration number uses the selected program, gender, enrollment year, session, nationality, and sequence.'
+                          'The generated registration number uses the selected program, gender, enrollment year, session, nationality, and sequence.',
                           style: TextStyle(fontSize: 12, color: Colors.black54))
                     ])),
             const SizedBox(height: 16),
@@ -260,7 +260,7 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
                                         children: [
                                           TextField(
                                               decoration: InputDecoration(
-                                                  labelText: 'Code e.g. BACS')),
+                                                  labelText: 'Program Code')),
                                           TextField(
                                               decoration: InputDecoration(
                                                   labelText: 'Name'))
@@ -283,14 +283,12 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
   Widget _buildProgramSelector() => DropdownButtonFormField<String>(
       initialValue: programs.any((item) => item.code == program) ? program : null,
       decoration: InputDecoration(
-          labelText: 'Program Code e.g. BACS',
+          labelText: 'Program Code',
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           filled: true,
           fillColor: Colors.white),
-      items: (programs.isEmpty
-              ? ['BACS', 'BIT', 'BBA']
-              : programs.map((e) => e.code).toList())
-          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+      items: programs
+          .map((e) => DropdownMenuItem(value: e.code, child: Text(e.code)))
           .toList(),
       onChanged: (v) => setState(() => program = v!));
 
@@ -329,7 +327,7 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
 
   Widget _buildSessionSelector() =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text('Study Session - D/E/W in 25D',
+        const Text('Study Session',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         Row(
