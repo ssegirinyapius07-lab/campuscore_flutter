@@ -115,9 +115,9 @@ class FeesTab extends StatelessWidget {
       SizedBox(
         height: 52,
         child: ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF2563EB), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2563EB), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
           onPressed: null,
-          child: Text('Make Payment - Mobile Money / Card', style: TextStyle(color: Colors.white)),
+          child: const Text('Make Payment - Mobile Money / Card', style: TextStyle(color: Colors.white)),
         ),
       ),
       const SizedBox(height: 16),
