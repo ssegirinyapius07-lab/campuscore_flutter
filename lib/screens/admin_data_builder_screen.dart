@@ -185,7 +185,6 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
                 controller: classYearCtrl,
                 decoration: InputDecoration(
                     labelText: 'Class / Year of Study',
-                    hintText: 'e.g. Year 2',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)),
                     filled: true,
