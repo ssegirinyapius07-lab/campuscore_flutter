@@ -11,11 +11,11 @@ class AdminDataBuilderScreen extends StatefulWidget {
 }
 
 class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
-  String program = 'BACS';
+  String program = '';
   String gender = 'M';
-  int year = 2025;
+  int year = DateTime.now().year;
   StudySession session = StudySession.day;
-  String nationality = 'UG';
+  String nationality = '';
   int seq = 1;
 
   List<Program> programs = [];
@@ -81,12 +81,12 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          'Your Format: PROGRAM/GENDER/YY+SESSION/NATIONALITY/SEQ',
+                          'Registration format: PROGRAM/GENDER/YY+SESSION/NATIONALITY/SEQ',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 12)),
                       SizedBox(height: 4),
                       Text(
-                          'Example: BACS/M/25D/UG/001 where 25D = 2025 Day (D=Day, E=Evening, W=Weekend)',
+                          'The generated registration number uses the selected program, gender, enrollment year, session, nationality, and sequence.'
                           style: TextStyle(fontSize: 12, color: Colors.black54))
                     ])),
             const SizedBox(height: 16),
@@ -249,19 +249,6 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
             const SizedBox(height: 12),
             Row(children: [
               Expanded(
-                  child: ElevatedButton(
-                      onPressed: () async {
-                        await db.loadExampleData();
-                        if (!mounted) return;
-                        await _load();
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text(
-                                'Loaded example BACS/M/25D/UG/001 format data')));
-                      },
-                      child: const Text('Load Example Data'))),
-              const SizedBox(width: 12),
-              Expanded(
                   child: OutlinedButton(
                       onPressed: () {
                         showDialog(
@@ -294,7 +281,7 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
   }
 
   Widget _buildProgramSelector() => DropdownButtonFormField<String>(
-      initialValue: programs.isEmpty ? null : program,
+      initialValue: programs.any((item) => item.code == program) ? program : null,
       decoration: InputDecoration(
           labelText: 'Program Code e.g. BACS',
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -362,15 +349,15 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
       ]);
 
   Widget _buildNationality() => DropdownButtonFormField<String>(
-      initialValue: nationality,
+      initialValue: nationality.isEmpty ? null : nationality,
       decoration: InputDecoration(
           labelText: 'Nationality',
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           filled: true,
           fillColor: Colors.white),
-      items: ['UG', 'KE', 'TZ', 'RW', 'SS', 'NG', 'GH']
-          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-          .toList(),
+      items: const [
+        'UG', 'KE', 'TZ', 'RW', 'SS', 'NG', 'GH'
+      ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
       onChanged: (v) => setState(() => nationality = v!));
 
   Widget _buildSeq() => TextField(
