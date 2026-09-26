@@ -72,7 +72,7 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
             SizedBox(width: double.infinity, height: 52, child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1E1B4B), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), onPressed: () async {
               final s = await db.addStudent(fullName: nameCtrl.text, gender: gender, programCode: program, enrollYear: year, session: session, nationality: nationality, email: emailCtrl.text, parentContact: '+256700000000', classYear: 'Year 2');
               if (!mounted) return;
-              messenger.showSnackBar(SnackBar(content: Text('Added ${s.regNo}')));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added ${s.regNo}')));
               nameCtrl.clear(); emailCtrl.clear();
             }, child: const Text('Add Student - Auto Generate Reg No', style: TextStyle(color: Colors.white)))),
 
