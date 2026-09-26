@@ -86,7 +86,7 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
             Row(children: [
               Expanded(child: ElevatedButton(onPressed: () async { await db.loadExampleData(); if (!context.mounted) return; await _load(); if (!context.mounted) return; ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Loaded example BACS/M/25D/UG/001 format data'))); }, child: const Text('Load Example Data'))),
               const SizedBox(width: 12),
-              Expanded(child: OutlinedButton(onPressed: (){ showDialog(context: context, builder: (_) => AlertDialog(title: const Text('Add Program'), content: Column(mainAxisSize: MainAxisSize.min, children: [const TextField(decoration: InputDecoration(labelText: 'Code e.g. BACS')), const TextField(decoration: InputDecoration(labelText: 'Name'))]), actions: [TextButton(onPressed: ()=>Navigator.pop(context), child: const Text('Add'))])); }, child: const Text('Add Program')))
+              Expanded(child: OutlinedButton(onPressed: (){ showDialog(context: context, builder: (_) => AlertDialog(title: const Text('Add Program'), content: Column(mainAxisSize: MainAxisSize.min, children: [const TextField(decoration: const InputDecoration(labelText: 'Code e.g. BACS')), const TextField(decoration: const InputDecoration(labelText: 'Name'))]), actions: [TextButton(onPressed: ()=>Navigator.pop(context), child: const Text('Add'))])); }, child: const Text('Add Program')))
             ]),
           ],
         ),
