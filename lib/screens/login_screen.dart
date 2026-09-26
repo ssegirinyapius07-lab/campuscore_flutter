@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _showForceChange() {
     showDialog(context: context, barrierDismissible: false, builder: (_) => AlertDialog(
       title: const Text('Change Default Password'),
-      content: Column(mainAxisSize: MainAxisSize.min, children: [
+      content: const Column(mainAxisSize: MainAxisSize.min, children: [
         const Text('Your default password is your registration number. Please change it before proceeding.', style: TextStyle(fontSize: 13)),
         const SizedBox(height: 12),
         const TextField(decoration: InputDecoration(labelText: 'New Password', border: OutlineInputBorder()), obscureText: true),
