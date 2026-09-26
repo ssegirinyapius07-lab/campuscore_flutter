@@ -11,7 +11,6 @@ class DatabaseService {
   static const _kStudents = 'cc_students';
   static const _kPrograms = 'cc_programs';
   static const _kFaculties = 'cc_faculties';
-  static const _kCourseUnits = 'cc_course_units';
 
   // Students
   Future<List<Student>> getStudents() async {
