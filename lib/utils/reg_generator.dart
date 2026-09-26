@@ -76,7 +76,6 @@ class RegGenerator {
   }) {
     final yy = enrollYear.toString().substring(enrollYear.toString().length - 2);
     final sCode = sessionCode(session);
-    final targetPrefix = '$program/'; // we filter further
     final count = existingRegNos.where((r) {
       final p = parse(r);
       return p['program'] == program && p['yy'] == yy && p['sessionCode'] == sCode;
