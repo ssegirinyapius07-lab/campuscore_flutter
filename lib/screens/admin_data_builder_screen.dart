@@ -176,7 +176,7 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
                         await db.loadExampleData();
                         if (!mounted) return;
                         await _load();
-                        if (!mounted) return;
+                        if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                             content: Text(
                                 'Loaded example BACS/M/25D/UG/001 format data')));
