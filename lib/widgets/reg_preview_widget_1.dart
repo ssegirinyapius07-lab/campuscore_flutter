@@ -47,7 +47,7 @@ class RegPreviewWidget extends StatelessWidget {
             children: [
               _chip('$program = Program', const Color(0xFF60A5FA)),
               _chip('$gender = Gender', Colors.white70),
-              _chip('$yy$sCode = ${yy} + ${RegGenerator.sessionLabel(session)}', const Color(0xFFFBBF24)),
+              _chip('$yy$sCode = $yy + ${RegGenerator.sessionLabel(session)}', const Color(0xFFFBBF24)),
               _chip('$nationality = Nationality', const Color(0xFF34D399)),
               _chip('${seq.toString().padLeft(3,'0')} = Personal No', Colors.white),
             ],
