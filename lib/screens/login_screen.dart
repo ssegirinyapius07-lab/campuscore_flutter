@@ -78,10 +78,26 @@ class _LoginScreenState extends State<LoginScreen> {
               const Text('Your Academic Success Hub', style: TextStyle(color: Colors.black54)),
               const SizedBox(height: 24),
               // Role pills
-              SingleChildScrollView(scrollDirection: Axis.horizontal, child: Row(children: ['Student','Lecturer','Admin','Parent'].map((r) {
-                final selected = role==r;
-                return Padding(padding: const EdgeInsets.only(right: 8), child: ChoiceChip(label: Text(r), selected: selected, onSelected: (_) => setState(()=>role=r), selectedColor: const Color(0xFF1E1B4B), labelStyle: TextStyle(color: selected?Colors.white:Colors.black54)));
-              }).toList())),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: ['Student', 'Lecturer', 'Admin', 'Parent'].map((item) {
+                    final selected = role == item;
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: ChoiceChip(
+                        label: Text(item),
+                        selected: selected,
+                        onSelected: (_) => setState(() => role = item),
+                        selectedColor: const Color(0xFF1E1B4B),
+                        labelStyle: TextStyle(
+                          color: selected ? Colors.white : Colors.black54,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
               const SizedBox(height: 24),
               TextField(controller: regCtrl, decoration: InputDecoration(labelText: role == 'Student' ? 'Registration number or email' : 'Staff ID or email', border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), filled: true, fillColor: const Color(0xFFF8FAFC))),
               const SizedBox(height: 16),
@@ -97,5 +113,4 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
+}
