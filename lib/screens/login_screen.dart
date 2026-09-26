@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../services/api_client.dart';
+import '../services/auth_service.dart';
+import '../services/auth_storage.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
   @override
@@ -11,6 +15,52 @@ class _LoginScreenState extends State<LoginScreen> {
   final regCtrl = TextEditingController(text: 'BACS/M/25D/UG/001');
   final passCtrl = TextEditingController();
   bool isFirstLogin = false;
+  bool loading = false;
+  late final AuthService _authService;
+
+  @override
+  void initState() {
+    super.initState();
+    _authService = AuthService();
+  }
+
+  @override
+  void dispose() {
+    regCtrl.dispose();
+    passCtrl.dispose();
+    _authService.dispose();
+    super.dispose();
+  }
+
+  Future<void> _login() async {
+    if (regCtrl.text.trim().isEmpty || passCtrl.text.isEmpty) {
+      _showMessage('Enter your identifier and password.');
+      return;
+    }
+    setState(() => loading = true);
+    try {
+      final session = await _authService.login(
+        identifier: regCtrl.text,
+        password: passCtrl.text,
+      );
+      await AuthStorage.save(session);
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(
+        context,
+        session.role == 'admin' ? '/admin-data' : '/home',
+      );
+    } on ApiException catch (error) {
+      if (mounted) _showMessage(error.message);
+    } catch (_) {
+      if (mounted) _showMessage('Could not connect to CampusCore. Check the server and network.');
+    } finally {
+      if (mounted) setState(() => loading = false);
+    }
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +87,9 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 16),
               TextField(controller: passCtrl, obscureText: true, decoration: InputDecoration(labelText: 'Password', border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), filled: true, fillColor: const Color(0xFFF8FAFC))),
               const SizedBox(height: 24),
-              SizedBox(width: double.infinity, height: 52, child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1E1B4B), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), onPressed: () {
-                if (isFirstLogin || regCtrl.text==passCtrl.text) {
-                  _showForceChange();
-                } else {
-                  Navigator.pushReplacementNamed(context, '/home');
-                }
-              }, child: const Text('Sign In', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))),
+              SizedBox(width: double.infinity, height: 52, child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1E1B4B), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), onPressed: loading ? null : _login, child: loading
+                  ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  : const Text('Sign In', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))),
               const SizedBox(height: 16),
               const Center(child: Text('End-to-end encrypted • Zero tracking', style: TextStyle(fontSize: 11, color: Colors.black38))),
             ],
