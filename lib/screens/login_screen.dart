@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                   : const Text('Sign In', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))),
               const SizedBox(height: 16),
-              const Center(child: Text('End-to-end encrypted • Zero tracking', style: TextStyle(fontSize: 11, color: Colors.black38))),
+
             ],
           ),
         ),
