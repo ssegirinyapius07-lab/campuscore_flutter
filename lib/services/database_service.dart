@@ -100,21 +100,4 @@ class DatabaseService {
     await prefs.setString(_kFaculties, jsonEncode(facs.map((e) => e.toJson()).toList()));
   }
 
-  // Load example data in YOUR format if needed
-  Future<void> loadExampleData() async {
-    final facs = [Faculty(id: 'f1', name: 'Computing'), Faculty(id: 'f2', name: 'Business')];
-    await saveFaculties(facs);
-    final progs = [
-      Program(code: 'BACS', name: 'Bachelor of Arts in Computer Science', facultyId: 'f1'),
-      Program(code: 'BIT', name: 'Bachelor of Information Technology', facultyId: 'f1'),
-      Program(code: 'BBA', name: 'Bachelor of Business Administration', facultyId: 'f2'),
-    ];
-    await savePrograms(progs);
-    final existing = await getStudents();
-    if (existing.isEmpty) {
-      await addStudent(fullName: 'John Mukasa', gender: 'M', programCode: 'BACS', enrollYear: 2025, session: StudySession.day, nationality: 'UG', email: 'john@uni.ac.ug', parentContact: '+256700000001', classYear: 'Year 2');
-      await addStudent(fullName: 'Mary Achieng', gender: 'F', programCode: 'BACS', enrollYear: 2025, session: StudySession.evening, nationality: 'KE', email: 'mary@uni.ac.ug', parentContact: '+256700000002', classYear: 'Year 2');
-      await addStudent(fullName: 'Peter Okello', gender: 'M', programCode: 'BIT', enrollYear: 2025, session: StudySession.weekend, nationality: 'UG', email: 'peter@uni.ac.ug', parentContact: '+256700000003', classYear: 'Year 1');
-    }
-  }
 }
