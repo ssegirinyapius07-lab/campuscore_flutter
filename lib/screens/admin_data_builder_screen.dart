@@ -24,11 +24,28 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
 
   final nameCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
+  final parentContactCtrl = TextEditingController();
+  final classYearCtrl = TextEditingController();
+  final yearCtrl = TextEditingController();
+  final seqCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    yearCtrl.text = year.toString();
+    seqCtrl.text = seq.toString();
     _load();
+  }
+
+  @override
+  void dispose() {
+    nameCtrl.dispose();
+    emailCtrl.dispose();
+    parentContactCtrl.dispose();
+    classYearCtrl.dispose();
+    yearCtrl.dispose();
+    seqCtrl.dispose();
+    super.dispose();
   }
 
   Future<void> _load() async {
@@ -86,19 +103,49 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
             const SizedBox(height: 12),
             _buildProgramSelector(),
             const SizedBox(height: 12),
-            Row(children: [
-              Expanded(child: _buildGender()),
-              const SizedBox(width: 12),
-              Expanded(child: _buildYear())
-            ]),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth < 600) {
+                  return Column(
+                    children: [
+                      _buildGender(),
+                      const SizedBox(height: 12),
+                      _buildYear(),
+                    ],
+                  );
+                }
+                return Row(
+                  children: [
+                    Expanded(child: _buildGender()),
+                    const SizedBox(width: 12),
+                    Expanded(child: _buildYear()),
+                  ],
+                );
+              },
+            ),
             const SizedBox(height: 12),
             _buildSessionSelector(),
             const SizedBox(height: 12),
-            Row(children: [
-              Expanded(child: _buildNationality()),
-              const SizedBox(width: 12),
-              Expanded(child: _buildSeq())
-            ]),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth < 600) {
+                  return Column(
+                    children: [
+                      _buildNationality(),
+                      const SizedBox(height: 12),
+                      _buildSeq(),
+                    ],
+                  );
+                }
+                return Row(
+                  children: [
+                    Expanded(child: _buildNationality()),
+                    const SizedBox(width: 12),
+                    Expanded(child: _buildSeq()),
+                  ],
+                );
+              },
+            ),
             const SizedBox(height: 24),
             const Divider(),
             const SizedBox(height: 12),
@@ -116,8 +163,29 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
             const SizedBox(height: 12),
             TextField(
                 controller: emailCtrl,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                     labelText: 'Email',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    filled: true,
+                    fillColor: Colors.white)),
+            const SizedBox(height: 12),
+            TextField(
+                controller: parentContactCtrl,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(
+                    labelText: 'Parent Contact',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    filled: true,
+                    fillColor: Colors.white)),
+            const SizedBox(height: 12),
+            TextField(
+                controller: classYearCtrl,
+                decoration: InputDecoration(
+                    labelText: 'Class / Year of Study',
+                    hintText: 'e.g. Year 2',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)),
                     filled: true,
@@ -132,22 +200,32 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12))),
                     onPressed: () async {
+                      if (nameCtrl.text.trim().isEmpty ||
+                          emailCtrl.text.trim().isEmpty ||
+                          parentContactCtrl.text.trim().isEmpty ||
+                          classYearCtrl.text.trim().isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text('Complete all student details first.')));
+                        return;
+                      }
                       final s = await db.addStudent(
-                          fullName: nameCtrl.text,
+                          fullName: nameCtrl.text.trim(),
                           gender: gender,
                           programCode: program,
                           enrollYear: year,
                           session: session,
                           nationality: nationality,
-                          email: emailCtrl.text,
-                          parentContact: '+256700000000',
-                          classYear: 'Year 2');
+                          email: emailCtrl.text.trim(),
+                          parentContact: parentContactCtrl.text.trim(),
+                          classYear: classYearCtrl.text.trim());
                       if (!mounted) return;
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Added ${s.regNo}')));
                       nameCtrl.clear();
                       emailCtrl.clear();
+                      parentContactCtrl.clear();
+                      classYearCtrl.clear();
                     },
                     child: const Text('Add Student - Auto Generate Reg No',
                         style: TextStyle(color: Colors.white)))),
@@ -251,12 +329,12 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
 
   Widget _buildYear() => TextField(
       decoration: InputDecoration(
-          labelText: 'Enroll Year 2025',
+          labelText: 'Enrollment Year',
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           filled: true,
           fillColor: Colors.white),
       keyboardType: TextInputType.number,
-      controller: TextEditingController(text: year.toString()),
+      controller: yearCtrl,
       onChanged: (v) {
         final y = int.tryParse(v);
         if (y != null) setState(() => year = y);
@@ -297,12 +375,12 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
 
   Widget _buildSeq() => TextField(
       decoration: InputDecoration(
-          labelText: 'Personal No e.g. 001',
+          labelText: 'Sequence Number',
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           filled: true,
           fillColor: Colors.white),
       keyboardType: TextInputType.number,
-      controller: TextEditingController(text: seq.toString()),
+      controller: seqCtrl,
       onChanged: (v) {
         final s = int.tryParse(v);
         if (s != null) setState(() => seq = s);
