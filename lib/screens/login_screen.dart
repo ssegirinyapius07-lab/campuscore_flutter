@@ -12,7 +12,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   String role = 'Student';
-  final regCtrl = TextEditingController(text: 'BACS/M/25D/UG/001');
+  final regCtrl = TextEditingController();
   final passCtrl = TextEditingController();
   bool isFirstLogin = false;
   bool loading = false;
@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 return Padding(padding: const EdgeInsets.only(right: 8), child: ChoiceChip(label: Text(r), selected: selected, onSelected: (_) => setState(()=>role=r), selectedColor: const Color(0xFF1E1B4B), labelStyle: TextStyle(color: selected?Colors.white:Colors.black54)));
               }).toList())),
               const SizedBox(height: 24),
-              TextField(controller: regCtrl, decoration: InputDecoration(labelText: role=='Student' ? 'Registration No e.g. BACS/M/25D/UG/001' : 'Staff ID', border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), filled: true, fillColor: const Color(0xFFF8FAFC))),
+              TextField(controller: regCtrl, decoration: InputDecoration(labelText: role == 'Student' ? 'Registration number or email' : 'Staff ID or email', border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), filled: true, fillColor: const Color(0xFFF8FAFC))),
               const SizedBox(height: 16),
               TextField(controller: passCtrl, obscureText: true, decoration: InputDecoration(labelText: 'Password', border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), filled: true, fillColor: const Color(0xFFF8FAFC))),
               const SizedBox(height: 24),
