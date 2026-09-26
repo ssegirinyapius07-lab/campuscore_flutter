@@ -152,7 +152,7 @@ class _StudentHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Welcome, ' + (student.fullName.isEmpty ? 'Student' : student.fullName),
+                  'Welcome, ${student.fullName.isEmpty ? 'Student' : student.fullName}',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
@@ -189,13 +189,13 @@ class _StatsGrid extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final columns = constraints.maxWidth >= 700 ? 4 : 2;
-        final spacing = 10.0;
+        const spacing = 10.0;
         final width = (constraints.maxWidth - spacing * (columns - 1)) / columns;
         return Wrap(
           spacing: spacing,
           runSpacing: spacing,
           children: [
-            SizedBox(width: width, child: _StatCard(label: 'Attendance', value: attendance.percentage.toStringAsFixed(0) + '%')),
+            SizedBox(width: width, child: _StatCard(label: 'Attendance', value: '${attendance.percentage.toStringAsFixed(0)}%')),
             SizedBox(width: width, child: _StatCard(label: 'Courses', value: courseCount.toString())),
             SizedBox(width: width, child: _StatCard(label: 'Present', value: attendance.present.toString())),
             SizedBox(width: width, child: _StatCard(label: 'Assessments', value: assessmentCount.toString())),
@@ -262,7 +262,7 @@ class _CourseTile extends StatelessWidget {
                 Text(course.name, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
                 Text(
-                  course.code + ' • ' + course.creditUnits.toString() + ' ' + units,
+                  '${course.code} • ${course.creditUnits} $units',
                   style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               ],
@@ -293,9 +293,9 @@ class _AcademicSummary extends StatelessWidget {
         children: [
           const Text('Academic summary', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
-          Text('Attendance: ' + attendance.present.toString() + ' present, ' + attendance.absent.toString() + ' absent, ' + attendance.late.toString() + ' late.'),
+          Text('Attendance: ${attendance.present} present, ${attendance.absent} absent, ${attendance.late} late.'),
           const SizedBox(height: 8),
-          Text('Recorded assessments: ' + assessments.length.toString() + '.'),
+          Text('Recorded assessments: ${assessments.length}.'),
         ],
       ),
     );
@@ -336,7 +336,7 @@ class AttendanceTab extends StatelessWidget {
         _EmptyCard(
           message: attendance.total == 0
               ? 'No attendance records have been recorded yet.'
-              : 'You have ' + attendance.present.toString() + ' present, ' + attendance.absent.toString() + ' absent and ' + attendance.late.toString() + ' late records.',
+              : 'You have ${attendance.present} present, ${attendance.absent} absent and ${attendance.late} late records.',
         ),
       ],
     );
