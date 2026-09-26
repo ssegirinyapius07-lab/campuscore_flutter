@@ -132,6 +132,7 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12))),
                     onPressed: () async {
+                      final messenger = ScaffoldMessenger.of(context);
                       final s = await db.addStudent(
                           fullName: nameCtrl.text,
                           gender: gender,
