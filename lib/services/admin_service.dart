@@ -11,7 +11,7 @@ class AdminService {
     if (session == null || session.accessToken.isEmpty) {
       throw const ApiException('Your session has expired. Please sign in again.');
     }
-    return {'Authorization': 'Bearer ' + session.accessToken};
+    return {'Authorization': 'Bearer ${session.accessToken}'};
   }
 
   Future<AdminDashboardStats> getDashboard() async => AdminDashboardStats.fromJson(
@@ -58,7 +58,7 @@ class AdminService {
     final session = await AuthStorage.load();
     if (session != null) {
       try {
-        await _apiClient.post('/auth/logout/', headers: {'Authorization': 'Bearer ' + session.accessToken}, body: {'refresh': session.refreshToken});
+        await _apiClient.post('/auth/logout/', headers: {'Authorization': 'Bearer ${session.accessToken}'}, body: {'refresh': session.refreshToken});
       } catch (_) {}
     }
     await AuthStorage.clear();
