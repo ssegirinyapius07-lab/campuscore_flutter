@@ -62,8 +62,11 @@ class ApiClient {
 
   Map<String, dynamic> _decode(http.Response response) {
     dynamic decoded;
+
     try {
-      decoded = response.body.isEmpty ? <String, dynamic>{} : jsonDecode(response.body);
+      decoded = response.body.isEmpty
+          ? <String, dynamic>{}
+          : jsonDecode(response.body);
     } catch (_) {
       throw ApiException(
         'The server returned an invalid response.',
@@ -72,13 +75,27 @@ class ApiClient {
     }
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      final message = decoded is Map<String, dynamic> && decoded['detail'] is String
-          ? decoded['detail'] as String
-          : 'The server request failed (${response.statusCode}).';
+      String message;
+
+      if (decoded is Map<String, dynamic> && decoded['detail'] is String) {
+        message = decoded['detail'] as String;
+      } else if (decoded is Map<String, dynamic> &&
+          decoded['detail'] is List) {
+        message = (decoded['detail'] as List).join(' ');
+      } else if (decoded is Map<String, dynamic> &&
+          decoded['non_field_errors'] is List) {
+        message = (decoded['non_field_errors'] as List).join(' ');
+      } else {
+        message = 'The server request failed (${response.statusCode}).';
+      }
+
       throw ApiException(message, statusCode: response.statusCode);
     }
 
-    if (decoded is Map<String, dynamic>) return decoded;
+    if (decoded is Map<String, dynamic>) {
+      return decoded;
+    }
+
     throw const ApiException('The server returned an unexpected response.');
   }
 
