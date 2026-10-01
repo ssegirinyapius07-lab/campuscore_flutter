@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../utils/reg_generator.dart';
 import '../widgets/reg_preview_widget.dart';
 import '../services/database_service.dart';
+import '../services/auth_service.dart';
+import '../services/auth_storage.dart';
 import '../models/program.dart';
 
 class AdminDataBuilderScreen extends StatefulWidget {
@@ -21,6 +23,7 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
   List<Program> programs = [];
   List<Faculty> faculties = [];
   final db = DatabaseService();
+  final AuthService _authService = AuthService();
 
   final nameCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
@@ -37,6 +40,27 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
     _load();
   }
 
+  Future<void> _logout() async {
+    final session = await AuthStorage.load();
+
+    if (session != null) {
+      try {
+        await _authService.logout(session);
+      } catch (_) {
+        // Continue with local logout if the server request fails.
+      }
+    }
+
+    await AuthStorage.clear();
+
+    if (!mounted) return;
+
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      '/login',
+      (route) => false,
+    );
+  }
+
   @override
   void dispose() {
     nameCtrl.dispose();
@@ -45,6 +69,7 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
     classYearCtrl.dispose();
     yearCtrl.dispose();
     seqCtrl.dispose();
+    _authService.dispose();
     super.dispose();
   }
 
@@ -63,8 +88,16 @@ class _AdminDataBuilderScreenState extends State<AdminDataBuilderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Data Structure Builder'),
-          backgroundColor: Colors.white),
+        title: const Text('Data Structure Builder'),
+        backgroundColor: Colors.white,
+        actions: [
+          IconButton(
+            tooltip: 'Log out',
+            onPressed: _logout,
+            icon: const Icon(Icons.logout),
+          ),
+        ],
+      ),
       backgroundColor: const Color(0xFFF8FAFC),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
