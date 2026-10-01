@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'models/auth_session.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/admin_data_builder_screen.dart';
@@ -17,7 +18,7 @@ Future<void> main() async {
 class CampusCoreApp extends StatefulWidget {
   const CampusCoreApp({super.key, this.session});
 
-  final dynamic session;
+  final AuthSession? session;
 
   @override
   State<CampusCoreApp> createState() => _CampusCoreAppState();
