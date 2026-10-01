@@ -5,6 +5,7 @@ import 'models/auth_session.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/admin_data_builder_screen.dart';
+import 'screens/super_admin_screen.dart';
 import 'services/auth_storage.dart';
 
 Future<void> main() async {
@@ -33,9 +34,11 @@ class _CampusCoreAppState extends State<CampusCoreApp> {
       return '/login';
     }
 
-    return session.role == 'admin' || session.role == 'superadmin'
-        ? '/admin-data'
-        : '/home';
+    return session.role == 'superadmin'
+        ? '/super-admin'
+        : session.role == 'admin'
+            ? '/admin-data'
+            : '/home';
   }
 
   @override
@@ -58,6 +61,7 @@ class _CampusCoreAppState extends State<CampusCoreApp> {
         '/login': (c) => const LoginScreen(),
         '/home': (c) => const HomeScreen(),
         '/admin-data': (c) => const AdminDataBuilderScreen(),
+        '/super-admin': (c) => const SuperAdminScreen(),
       },
     );
   }
