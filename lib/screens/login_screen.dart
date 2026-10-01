@@ -47,7 +47,9 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return;
       Navigator.pushReplacementNamed(
         context,
-        session.role == 'admin' || session.role == 'superadmin'\n            ? '/admin-data'\n            : '/home',
+        session.role == 'admin' || session.role == 'superadmin'
+            ? '/admin-data'
+            : '/home',
       );
     } on ApiException catch (error) {
       if (mounted) _showMessage(error.message);
