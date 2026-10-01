@@ -128,7 +128,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
           const CircleAvatar(radius: 28, backgroundColor: Color(0xFF1E293B), child: Icon(Icons.admin_panel_settings_outlined, color: Colors.white, size: 28)),
           const SizedBox(width: 16), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const Text('SUPER ADMIN CONTROL CENTER', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 1)),
-            const SizedBox(height: 6), Text('Welcome, ' + displayName, style: const TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 6), Text('Welcome, $displayName', style: const TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.w800)),
             const SizedBox(height: 6), const Text('Manage the institution from one place using live CampusCore data.', style: TextStyle(color: Color(0xFFCBD5E1))),
           ])),
         ])),
@@ -173,7 +173,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
   Widget academicStructure() => ListView(padding: const EdgeInsets.all(22), children: [
     Row(children: [const Expanded(child: _Heading('Academic structure', 'Faculties and programs stored in Django.')), FilledButton.icon(onPressed: showCreateProgram, icon: const Icon(Icons.add), label: const Text('New program'))]),
     const SizedBox(height: 18),
-    LayoutBuilder(builder: (_, c) { final stacked = c.maxWidth < 780; final a = listCard('Faculties • ' + faculties.length.toString(), faculties.isEmpty ? const Text('No faculties have been created yet.') : Column(children: faculties.map((f) => ListTile(contentPadding: EdgeInsets.zero, leading: CircleAvatar(radius: 18, backgroundColor: const Color(0xFFEFF6FF), child: Text(f.code.length >= 2 ? f.code.substring(0, 2) : f.code)), title: Text(f.name, style: const TextStyle(fontWeight: FontWeight.w700)), subtitle: Text(f.code))).toList()), trailing: IconButton(onPressed: showCreateFaculty, icon: const Icon(Icons.add))); final b = listCard('Programs • ' + programs.length.toString(), programs.isEmpty ? const Text('No programs have been created yet.') : Column(children: programs.map((p) => ListTile(contentPadding: EdgeInsets.zero, title: Text(p.code + ' — ' + p.name, style: const TextStyle(fontWeight: FontWeight.w700)), subtitle: Text(p.faculty.code + ' • ' + p.level.code + ' • ' + p.durationYears.toString() + ' years'))).toList()), trailing: IconButton(onPressed: showCreateProgram, icon: const Icon(Icons.add))); return stacked ? Column(children: [a, const SizedBox(height: 16), b]) : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: a), const SizedBox(width: 16), Expanded(child: b)]); }),
+    LayoutBuilder(builder: (_, c) { final stacked = c.maxWidth < 780; final a = listCard('Faculties • ${faculties.length}', faculties.isEmpty ? const Text('No faculties have been created yet.') : Column(children: faculties.map((f) => ListTile(contentPadding: EdgeInsets.zero, leading: CircleAvatar(radius: 18, backgroundColor: const Color(0xFFEFF6FF), child: Text(f.code.length >= 2 ? f.code.substring(0, 2) : f.code)), title: Text(f.name, style: const TextStyle(fontWeight: FontWeight.w700)), subtitle: Text(f.code))).toList()), trailing: IconButton(onPressed: showCreateFaculty, icon: const Icon(Icons.add))); final b = listCard('Programs • ${programs.length}', programs.isEmpty ? const Text('No programs have been created yet.') : Column(children: programs.map((p) => ListTile(contentPadding: EdgeInsets.zero, title: Text(p.code + ' — ' + p.name, style: const TextStyle(fontWeight: FontWeight.w700)), subtitle: Text(p.faculty.code + ' • ' + p.level.code + ' • ' + p.durationYears.toString() + ' years'))).toList()), trailing: IconButton(onPressed: showCreateProgram, icon: const Icon(Icons.add))); return stacked ? Column(children: [a, const SizedBox(height: 16), b]) : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: a), const SizedBox(width: 16), Expanded(child: b)]); }),
   ]);
 
   Widget modulePage(
@@ -216,7 +216,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
                   ),
                   const SizedBox(height: 18),
                   Text(
-                    'Current system users: ' + s.totalUsers.toString(),
+                    'Current system users: ${s.totalUsers}',
                     style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
                 ],
@@ -228,41 +228,439 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
     );
   }
 
-  Widget metricCard(_Metric m) => Card(elevation: 0, child: Padding(padding: const EdgeInsets.all(18), child: Row(children: [
-    Container(width: 44, height: 44, decoration: BoxDecoration(color: const Color(0xFFF1F5F9), borderRadius: BorderRadius.circular(12)), child: Icon(m.icon)),
-    const SizedBox(width: 12), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(m.label, style: const TextStyle(color: Color(0xFF64748B), fontSize: 12)), const SizedBox(height: 4), Text(m.value.toString(), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800))])),
-  ])));
+  Widget metricCard(_Metric metric) {
+    return Card(
+      elevation: 0,
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF1F5F9),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(metric.icon),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    metric.label,
+                    style: const TextStyle(
+                      color: Color(0xFF64748B),
+                      fontSize: 12,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    metric.value.toString(),
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-  Widget actionCard(IconData icon, String title, String text, VoidCallback onTap) => Card(elevation: 0, child: InkWell(onTap: onTap, borderRadius: BorderRadius.circular(12), child: Padding(padding: const EdgeInsets.all(18), child: Row(children: [
-    Container(width: 46, height: 46, decoration: BoxDecoration(color: const Color(0xFFEFF6FF), borderRadius: BorderRadius.circular(12)), child: Icon(icon)), const SizedBox(width: 12),
-    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: const TextStyle(fontWeight: FontWeight.w800)), const SizedBox(height: 4), Text(text, style: const TextStyle(color: Color(0xFF64748B), fontSize: 12))])), const Icon(Icons.arrow_forward_ios_rounded, size: 15),
-  ])));
+  Widget actionCard(
+    IconData icon,
+    String title,
+    String description,
+    VoidCallback onTap,
+  ) {
+    return Card(
+      elevation: 0,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Row(
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEFF6FF),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      style: const TextStyle(
+                        color: Color(0xFF64748B),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios_rounded, size: 15),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-  Widget listCard(String title, Widget child, {Widget? trailing}) => Card(elevation: 0, child: Padding(padding: const EdgeInsets.all(18), child: Column(children: [Row(children: [Expanded(child: Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16))), if (trailing != null) trailing]), const SizedBox(height: 8), child])));
-  Widget errorView() => Center(child: Padding(padding: const EdgeInsets.all(28), child: Card(elevation: 0, child: Padding(padding: const EdgeInsets.all(24), child: Column(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.cloud_off_outlined, size: 42), const SizedBox(height: 14), Text(error!, textAlign: TextAlign.center), const SizedBox(height: 16), FilledButton.icon(onPressed: load, icon: const Icon(Icons.refresh_rounded), label: const Text('Try again'))]))));
+  Widget listCard(
+    String title,
+    Widget child, {
+    Widget? trailing,
+  }) {
+    return Card(
+      elevation: 0,
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                if (trailing != null) trailing,
+              ],
+            ),
+            const SizedBox(height: 8),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget errorView() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(28),
+        child: Card(
+          elevation: 0,
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.cloud_off_outlined, size: 42),
+                const SizedBox(height: 14),
+                Text(error!, textAlign: TextAlign.center),
+                const SizedBox(height: 16),
+                FilledButton.icon(
+                  onPressed: load,
+                  icon: const Icon(Icons.refresh_rounded),
+                  label: const Text('Try again'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   Future<void> showCreateFaculty() async {
-    final code = TextEditingController(); final name = TextEditingController(); final description = TextEditingController();
-    final created = await showDialog<bool>(context: context, builder: (dialogContext) => AlertDialog(title: const Text('Create faculty'), content: SizedBox(width: 440, child: Column(mainAxisSize: MainAxisSize.min, children: [TextField(controller: code, textCapitalization: TextCapitalization.characters, decoration: const InputDecoration(labelText: 'Faculty code')), const SizedBox(height: 12), TextField(controller: name, decoration: const InputDecoration(labelText: 'Faculty name')), const SizedBox(height: 12), TextField(controller: description, maxLines: 3, decoration: const InputDecoration(labelText: 'Description'))])), actions: [TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancel')), FilledButton(onPressed: () async { if (code.text.trim().isEmpty || name.text.trim().isEmpty) return; try { await _service.createFaculty(code: code.text.trim().toUpperCase(), name: name.text.trim(), description: description.text.trim()); if (dialogContext.mounted) Navigator.pop(dialogContext, true); } on ApiException catch (e) { if (dialogContext.mounted) ScaffoldMessenger.of(dialogContext).showSnackBar(SnackBar(content: Text(e.message))); } }, child: const Text('Create'))]));
-    code.dispose(); name.dispose(); description.dispose(); if (created == true) await load();
+    final code = TextEditingController();
+    final name = TextEditingController();
+    final description = TextEditingController();
+
+    final created = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Create faculty'),
+          content: SizedBox(
+            width: 440,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: code,
+                  textCapitalization: TextCapitalization.characters,
+                  decoration: const InputDecoration(labelText: 'Faculty code'),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: name,
+                  decoration: const InputDecoration(labelText: 'Faculty name'),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: description,
+                  maxLines: 3,
+                  decoration: const InputDecoration(labelText: 'Description'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () async {
+                if (code.text.trim().isEmpty || name.text.trim().isEmpty) {
+                  return;
+                }
+
+                try {
+                  await _service.createFaculty(
+                    code: code.text.trim().toUpperCase(),
+                    name: name.text.trim(),
+                    description: description.text.trim(),
+                  );
+                  if (dialogContext.mounted) {
+                    Navigator.pop(dialogContext, true);
+                  }
+                } on ApiException catch (e) {
+                  if (dialogContext.mounted) {
+                    ScaffoldMessenger.of(dialogContext).showSnackBar(
+                      SnackBar(content: Text(e.message)),
+                    );
+                  }
+                }
+              },
+              child: const Text('Create'),
+            ),
+          ],
+        );
+      },
+    );
+
+    code.dispose();
+    name.dispose();
+    description.dispose();
+
+    if (created == true) {
+      await load();
+    }
   }
 
   Future<void> showCreateProgram() async {
-    if (faculties.isEmpty || levels.where((x) => x.isActive).isEmpty) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Create a faculty and an active program level first.'))); return; }
-    final code = TextEditingController(); final name = TextEditingController(); final duration = TextEditingController(text: '4'); final description = TextEditingController();
-    int facultyId = faculties.first.id; int levelId = levels.firstWhere((x) => x.isActive).id;
-    final created = await showDialog<bool>(context: context, builder: (dialogContext) => StatefulBuilder(builder: (context, setStateDialog) => AlertDialog(title: const Text('Create academic program'), content: SizedBox(width: 500, child: SingleChildScrollView(child: Column(mainAxisSize: MainAxisSize.min, children: [
-      TextField(controller: code, textCapitalization: TextCapitalization.characters, decoration: const InputDecoration(labelText: 'Program code')), const SizedBox(height: 12),
-      TextField(controller: name, decoration: const InputDecoration(labelText: 'Program name')), const SizedBox(height: 12),
-      DropdownButtonFormField<int>(value: facultyId, decoration: const InputDecoration(labelText: 'Faculty'), items: faculties.map((f) => DropdownMenuItem(value: f.id, child: Text(f.code + ' — ' + f.name))).toList(), onChanged: (v) { if (v != null) setStateDialog(() => facultyId = v); }), const SizedBox(height: 12),
-      DropdownButtonFormField<int>(value: levelId, decoration: const InputDecoration(labelText: 'Program level'), items: levels.where((x) => x.isActive).map((l) => DropdownMenuItem(value: l.id, child: Text(l.code + ' — ' + l.name))).toList(), onChanged: (v) { if (v != null) setStateDialog(() => levelId = v); }), const SizedBox(height: 12),
-      TextField(controller: duration, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Duration in years')), const SizedBox(height: 12),
-      TextField(controller: description, maxLines: 3, decoration: const InputDecoration(labelText: 'Description')),
-    ]))), actions: [TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancel')), FilledButton(onPressed: () async { final years = int.tryParse(duration.text.trim()); if (code.text.trim().isEmpty || name.text.trim().isEmpty || years == null || years < 1) return; try { await _service.createProgram(code: code.text.trim().toUpperCase(), name: name.text.trim(), durationYears: years, facultyId: facultyId, levelId: levelId, description: description.text.trim()); if (dialogContext.mounted) Navigator.pop(dialogContext, true); } on ApiException catch (e) { if (dialogContext.mounted) ScaffoldMessenger.of(dialogContext).showSnackBar(SnackBar(content: Text(e.message))); } }, child: const Text('Create'))]));
-    code.dispose(); name.dispose(); duration.dispose(); description.dispose(); if (created == true) await load();
+    final activeLevels = levels.where((level) => level.isActive).toList();
+
+    if (faculties.isEmpty || activeLevels.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Create a faculty and an active program level first.',
+          ),
+        ),
+      );
+      return;
+    }
+
+    final code = TextEditingController();
+    final name = TextEditingController();
+    final duration = TextEditingController(text: '4');
+    final description = TextEditingController();
+
+    int facultyId = faculties.first.id;
+    int levelId = activeLevels.first.id;
+
+    final created = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (dialogContext, setStateDialog) {
+            return AlertDialog(
+              title: const Text('Create academic program'),
+              content: SizedBox(
+                width: 500,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        controller: code,
+                        textCapitalization: TextCapitalization.characters,
+                        decoration: const InputDecoration(labelText: 'Program code'),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: name,
+                        decoration: const InputDecoration(labelText: 'Program name'),
+                      ),
+                      const SizedBox(height: 12),
+                      DropdownButtonFormField<int>(
+                        initialValue: facultyId,
+                        decoration: const InputDecoration(labelText: 'Faculty'),
+                        items: faculties.map((faculty) {
+                          return DropdownMenuItem<int>(
+                            value: faculty.id,
+                            child: Text(
+                              faculty.code + ' — ' + faculty.name,
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            setStateDialog(() => facultyId = value);
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      DropdownButtonFormField<int>(
+                        initialValue: levelId,
+                        decoration: const InputDecoration(labelText: 'Program level'),
+                        items: activeLevels.map((level) {
+                          return DropdownMenuItem<int>(
+                            value: level.id,
+                            child: Text(
+                              level.code + ' — ' + level.name,
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            setStateDialog(() => levelId = value);
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: duration,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Duration in years',
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: description,
+                        maxLines: 3,
+                        decoration: const InputDecoration(labelText: 'Description'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext, false),
+                  child: const Text('Cancel'),
+                ),
+                FilledButton(
+                  onPressed: () async {
+                    final years = int.tryParse(duration.text.trim());
+
+                    if (code.text.trim().isEmpty ||
+                        name.text.trim().isEmpty ||
+                        years == null ||
+                        years < 1) {
+                      return;
+                    }
+
+                    try {
+                      await _service.createProgram(
+                        code: code.text.trim().toUpperCase(),
+                        name: name.text.trim(),
+                        durationYears: years,
+                        facultyId: facultyId,
+                        levelId: levelId,
+                        description: description.text.trim(),
+                      );
+                      if (dialogContext.mounted) {
+                        Navigator.pop(dialogContext, true);
+                      }
+                    } on ApiException catch (e) {
+                      if (dialogContext.mounted) {
+                        ScaffoldMessenger.of(dialogContext).showSnackBar(
+                          SnackBar(content: Text(e.message)),
+                        );
+                      }
+                    }
+                  },
+                  child: const Text('Create'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    code.dispose();
+    name.dispose();
+    duration.dispose();
+    description.dispose();
+
+    if (created == true) {
+      await load();
+    }
   }
 }
 
-class _AdminItem { const _AdminItem(this.title, this.icon); final String title; final IconData icon; }
-class _Metric { const _Metric(this.label, this.value, this.icon); final String label; final int value; final IconData icon; }
-class _Heading extends StatelessWidget { const _Heading(this.title, this.subtitle); final String title, subtitle; @override Widget build(BuildContext context) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800)), const SizedBox(height: 4), Text(subtitle, style: const TextStyle(color: Color(0xFF64748B), fontSize: 12))]); }
+class _AdminItem {
+  const _AdminItem(this.title, this.icon);
+
+  final String title;
+  final IconData icon;
+}
+
+class _Metric {
+  const _Metric(this.label, this.value, this.icon);
+
+  final String label;
+  final int value;
+  final IconData icon;
+}
+
+class _Heading extends StatelessWidget {
+  const _Heading(this.title, this.subtitle);
+
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          subtitle,
+          style: const TextStyle(
+            color: Color(0xFF64748B),
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
+  }
+}
