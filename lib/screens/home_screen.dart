@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen>
       duration: const Duration(milliseconds: 900),
     );
 
-    _loadDashboard();
+    _verifyStudentSession();
   }
 
   @override
@@ -102,6 +102,50 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
+  Future<void> _verifyStudentSession() async {
+    final session = await AuthStorage.load();
+
+    if (session == null || session.accessToken.isEmpty) {
+      if (!mounted) return;
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        '/login',
+        (route) => false,
+      );
+      return;
+    }
+
+    try {
+      final currentSession = await _authService.me(session);
+      await AuthStorage.save(currentSession);
+
+      if (currentSession.role != 'student') {
+        final route =
+            currentSession.role == 'admin' || currentSession.role == 'superadmin'
+                ? '/admin-data'
+                : '/login';
+
+        if (!mounted) return;
+
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          route,
+          (route) => false,
+        );
+        return;
+      }
+
+      await _loadDashboard();
+    } catch (_) {
+      await AuthStorage.clear();
+
+      if (!mounted) return;
+
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        '/login',
+        (route) => false,
+      );
+    }
+  }
+
   Future<void> _loadDashboard() async {
     if (mounted) {
       setState(() {
@@ -152,12 +196,7 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
       appBar: _buildAppBar(context),
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 350),
-        switchInCurve: Curves.easeOutCubic,
-        switchOutCurve: Curves.easeInCubic,
-        child: _buildBody(dashboard),
-      ),
+      body: _buildBody(dashboard),
       bottomNavigationBar: _buildBottomNavigationBar(context),
     );
   }

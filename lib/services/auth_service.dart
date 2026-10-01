@@ -20,6 +20,21 @@ class AuthService {
     return AuthSession.fromJson(response);
   }
 
+  Future<AuthSession> me(AuthSession session) async {
+    final response = await _apiClient.get(
+      '/auth/me/',
+      headers: {'Authorization': 'Bearer ${session.accessToken}'},
+    );
+
+    return AuthSession(
+      accessToken: session.accessToken,
+      refreshToken: session.refreshToken,
+      userId: response['id']?.toString() ?? session.userId,
+      role: response['role'] as String? ?? session.role,
+      displayName: response['display_name'] as String? ?? session.displayName,
+    );
+  }
+
   Future<AuthSession> refresh(String refreshToken) async {
     final response = await _apiClient.post(
       '/auth/refresh/',
