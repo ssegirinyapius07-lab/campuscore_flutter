@@ -33,7 +33,9 @@ class _CampusCoreAppState extends State<CampusCoreApp> {
       return '/login';
     }
 
-    return session.role == 'admin' ? '/admin-data' : '/home';
+    return session.role == 'admin' || session.role == 'superadmin'
+        ? '/admin-data'
+        : '/home';
   }
 
   @override
