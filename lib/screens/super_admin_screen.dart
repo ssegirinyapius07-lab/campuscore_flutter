@@ -144,7 +144,28 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
           const SizedBox(width: 14),
           Expanded(child: actionCard(Icons.add_business_outlined, 'Add program', 'Register a program under a faculty and level.', showCreateProgram)),
         ]),
-        const SizedBox(height: 22), listCard('Programs in the database', programs.isEmpty ? const Text('No programs yet.') : Column(children: programs.take(6).map((p) => ListTile(contentPadding: EdgeInsets.zero, title: Text(p.code + ' — ' + p.name, style: const TextStyle(fontWeight: FontWeight.w700)), subtitle: Text(p.faculty.code + ' • ' + p.level.code + ' • ' + p.durationYears.toString() + ' years')).toList())),
+          const SizedBox(height: 22),
+          listCard(
+            'Programs in the database',
+            programs.isEmpty
+                ? const Text('No programs yet.')
+                : Column(
+                    children: programs.take(6).map((program) {
+                      return ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(
+                          program.code + ' — ' + program.name,
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        subtitle: Text(
+                          program.faculty.code + ' • ' +
+                              program.level.code + ' • ' +
+                              program.durationYears.toString() + ' years',
+                        ),
+                      );
+                    }).toList(),
+                  ),
+          ),
       ]),
     );
   }
@@ -155,12 +176,57 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
     LayoutBuilder(builder: (_, c) { final stacked = c.maxWidth < 780; final a = listCard('Faculties • ' + faculties.length.toString(), faculties.isEmpty ? const Text('No faculties have been created yet.') : Column(children: faculties.map((f) => ListTile(contentPadding: EdgeInsets.zero, leading: CircleAvatar(radius: 18, backgroundColor: const Color(0xFFEFF6FF), child: Text(f.code.length >= 2 ? f.code.substring(0, 2) : f.code)), title: Text(f.name, style: const TextStyle(fontWeight: FontWeight.w700)), subtitle: Text(f.code))).toList()), trailing: IconButton(onPressed: showCreateFaculty, icon: const Icon(Icons.add))); final b = listCard('Programs • ' + programs.length.toString(), programs.isEmpty ? const Text('No programs have been created yet.') : Column(children: programs.map((p) => ListTile(contentPadding: EdgeInsets.zero, title: Text(p.code + ' — ' + p.name, style: const TextStyle(fontWeight: FontWeight.w700)), subtitle: Text(p.faculty.code + ' • ' + p.level.code + ' • ' + p.durationYears.toString() + ' years'))).toList()), trailing: IconButton(onPressed: showCreateProgram, icon: const Icon(Icons.add))); return stacked ? Column(children: [a, const SizedBox(height: 16), b]) : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: a), const SizedBox(width: 16), Expanded(child: b)]); }),
   ]);
 
-  Widget modulePage(String title, IconData icon, AdminDashboardStats s) => Center(child: SingleChildScrollView(padding: const EdgeInsets.all(28), child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 700), child: Card(elevation: 0, child: Padding(padding: const EdgeInsets.all(28), child: Column(children: [
-    CircleAvatar(radius: 34, backgroundColor: const Color(0xFFEFF6FF), child: Icon(icon, size: 34)), const SizedBox(height: 18),
-    Text(title, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800)), const SizedBox(height: 10),
-    const Text('This module is next in the live backend build. It will be connected directly to CampusCore database records rather than local phone storage.', textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF64748B), height: 1.5)),
-    const SizedBox(height: 18), Text('Current system users: ' + s.totalUsers.toString(), style: const TextStyle(fontWeight: FontWeight.w700)),
-  ])))));
+  Widget modulePage(
+    String title,
+    IconData icon,
+    AdminDashboardStats s,
+  ) {
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(28),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 700),
+          child: Card(
+            elevation: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(28),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 34,
+                    backgroundColor: const Color(0xFFEFF6FF),
+                    child: Icon(icon, size: 34),
+                  ),
+                  const SizedBox(height: 18),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'This module is next in the live backend build. It will be connected directly to CampusCore database records rather than local phone storage.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF64748B),
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  Text(
+                    'Current system users: ' + s.totalUsers.toString(),
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget metricCard(_Metric m) => Card(elevation: 0, child: Padding(padding: const EdgeInsets.all(18), child: Row(children: [
     Container(width: 44, height: 44, decoration: BoxDecoration(color: const Color(0xFFF1F5F9), borderRadius: BorderRadius.circular(12)), child: Icon(m.icon)),
