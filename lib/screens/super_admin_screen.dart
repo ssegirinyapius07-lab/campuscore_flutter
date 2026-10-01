@@ -154,13 +154,11 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
                       return ListTile(
                         contentPadding: EdgeInsets.zero,
                         title: Text(
-                          program.code + ' — ' + program.name,
+                          ${program.code} — ${program.name},
                           style: const TextStyle(fontWeight: FontWeight.w700),
                         ),
                         subtitle: Text(
-                          program.faculty.code + ' • ' +
-                              program.level.code + ' • ' +
-                              program.durationYears.toString() + ' years',
+                          ${program.faculty.code} • ${program.level.code} • ${program.durationYears} years,
                         ),
                       );
                     }).toList(),
@@ -173,7 +171,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
   Widget academicStructure() => ListView(padding: const EdgeInsets.all(22), children: [
     Row(children: [const Expanded(child: _Heading('Academic structure', 'Faculties and programs stored in Django.')), FilledButton.icon(onPressed: showCreateProgram, icon: const Icon(Icons.add), label: const Text('New program'))]),
     const SizedBox(height: 18),
-    LayoutBuilder(builder: (_, c) { final stacked = c.maxWidth < 780; final a = listCard('Faculties • ${faculties.length}', faculties.isEmpty ? const Text('No faculties have been created yet.') : Column(children: faculties.map((f) => ListTile(contentPadding: EdgeInsets.zero, leading: CircleAvatar(radius: 18, backgroundColor: const Color(0xFFEFF6FF), child: Text(f.code.length >= 2 ? f.code.substring(0, 2) : f.code)), title: Text(f.name, style: const TextStyle(fontWeight: FontWeight.w700)), subtitle: Text(f.code))).toList()), trailing: IconButton(onPressed: showCreateFaculty, icon: const Icon(Icons.add))); final b = listCard('Programs • ${programs.length}', programs.isEmpty ? const Text('No programs have been created yet.') : Column(children: programs.map((p) => ListTile(contentPadding: EdgeInsets.zero, title: Text(p.code + ' — ' + p.name, style: const TextStyle(fontWeight: FontWeight.w700)), subtitle: Text(p.faculty.code + ' • ' + p.level.code + ' • ' + p.durationYears.toString() + ' years'))).toList()), trailing: IconButton(onPressed: showCreateProgram, icon: const Icon(Icons.add))); return stacked ? Column(children: [a, const SizedBox(height: 16), b]) : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: a), const SizedBox(width: 16), Expanded(child: b)]); }),
+    LayoutBuilder(builder: (_, c) { final stacked = c.maxWidth < 780; final a = listCard('Faculties • ${faculties.length}', faculties.isEmpty ? const Text('No faculties have been created yet.') : Column(children: faculties.map((f) => ListTile(contentPadding: EdgeInsets.zero, leading: CircleAvatar(radius: 18, backgroundColor: const Color(0xFFEFF6FF), child: Text(f.code.length >= 2 ? f.code.substring(0, 2) : f.code)), title: Text(f.name, style: const TextStyle(fontWeight: FontWeight.w700)), subtitle: Text(f.code))).toList()), trailing: IconButton(onPressed: showCreateFaculty, icon: const Icon(Icons.add))); final b = listCard('Programs • ${programs.length}', programs.isEmpty ? const Text('No programs have been created yet.') : Column(children: programs.map((p) => ListTile(contentPadding: EdgeInsets.zero, title: Text(${p.code} — ${p.name}, style: const TextStyle(fontWeight: FontWeight.w700)), subtitle: Text(${p.faculty.code} • ${p.level.code} • ${p.durationYears} years))).toList()), trailing: IconButton(onPressed: showCreateProgram, icon: const Icon(Icons.add))); return stacked ? Column(children: [a, const SizedBox(height: 16), b]) : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: a), const SizedBox(width: 16), Expanded(child: b)]); }),
   ]);
 
   Widget modulePage(
@@ -517,7 +515,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
                           return DropdownMenuItem<int>(
                             value: faculty.id,
                             child: Text(
-                              faculty.code + ' — ' + faculty.name,
+                              ${faculty.code} — ${faculty.name},
                             ),
                           );
                         }).toList(),
@@ -535,7 +533,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
                           return DropdownMenuItem<int>(
                             value: level.id,
                             child: Text(
-                              level.code + ' — ' + level.name,
+                              ${level.code} — ${level.name},
                             ),
                           );
                         }).toList(),
