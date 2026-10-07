@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- CampusCore brand mark: academic pages forming a core -->
+    <path
+        android:fillColor="#0F172A"
+        android:pathData="M54,10
+            C29.70,10 10,29.70 10,54
+            C10,78.30 29.70,98 54,98
+            C78.30,98 98,78.30 98,54
+            C98,29.70 78.30,10 54,10 Z" />
+
+    <path
+        android:fillColor="#2563EB"
+        android:pathData="M27,38
+            L49,48
+            L49,78
+            L27,67
+            Z" />
+
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M81,38
+            L59,48
+            L59,78
+            L81,67
+            Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M32,39
+            L54,50
+            L76,39
+            L76,48
+            L54,60
+            L32,48
+            Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M49,50
+            L54,53
+            L59,50
+            L59,72
+            L54,76
+            L49,72
+            Z" />
+
+    <path
+        android:fillColor="#06B6D4"
+        android:pathData="M54,42
+            C48.48,42 44,46.48 44,52
+            C44,57.52 48.48,62 54,62
+            C59.52,62 64,57.52 64,52
+            C64,46.48 59.52,42 54,42 Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,47
+            C51.24,47 49,49.24 49,52
+            C49,54.76 51.24,57 54,57
+            C56.76,57 59,54.76 59,52
+            C59,49.24 56.76,47 54,47 Z" />
+</vector>
