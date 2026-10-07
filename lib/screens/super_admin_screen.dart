@@ -301,7 +301,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
             : constraints.maxWidth >= 520
                 ? 2
                 : 1;
-        final gap = 12.0;
+        const gap = 12.0;
         final width = (constraints.maxWidth - (gap * (columns - 1))) / columns;
 
         return Wrap(
