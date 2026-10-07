@@ -121,53 +121,204 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
 
   Widget overview() {
     final s = stats!;
+
     return RefreshIndicator(
       onRefresh: load,
-      child: ListView(padding: const EdgeInsets.all(22), children: [
-        Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: const Color(0xFF0F172A), borderRadius: BorderRadius.circular(20)), child: Row(children: [
-          const CircleAvatar(radius: 28, backgroundColor: Color(0xFF1E293B), child: Icon(Icons.admin_panel_settings_outlined, color: Colors.white, size: 28)),
-          const SizedBox(width: 16), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text('SUPER ADMIN CONTROL CENTER', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 1)),
-            const SizedBox(height: 6), Text('Welcome, $displayName', style: const TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.w800)),
-            const SizedBox(height: 6), const Text('Manage the institution from one place using live CampusCore data.', style: TextStyle(color: Color(0xFFCBD5E1))),
-          ])),
-        ])),
-        const SizedBox(height: 22), const _Heading('System overview', 'Live figures from the CampusCore database.'), const SizedBox(height: 12),
-        LayoutBuilder(builder: (_, c) { final cols = c.maxWidth >= 1100 ? 4 : c.maxWidth >= 700 ? 3 : 2; final w = (c.maxWidth - ((cols - 1) * 12)) / cols; final m = <_Metric>[
-          _Metric('Total users', s.totalUsers, Icons.people_outline), _Metric('Students', s.students, Icons.school_outlined),
-          _Metric('Lecturers', s.lecturers, Icons.co_present_outlined), _Metric('Programs', s.programs, Icons.account_tree_outlined),
-          _Metric('Faculties', s.faculties, Icons.domain_outlined), _Metric('Course units', s.courseUnits, Icons.menu_book_outlined),
-          _Metric('Academic years', s.academicYears, Icons.calendar_month_outlined), _Metric('Semesters', s.semesters, Icons.event_note_outlined),
-        ]; return Wrap(spacing: 12, runSpacing: 12, children: m.map((x) => SizedBox(width: w, child: metricCard(x))).toList()); }),
-        const SizedBox(height: 22), Row(children: [
-          Expanded(child: actionCard(Icons.domain_add_outlined, 'Add faculty', 'Create a faculty in the live database.', showCreateFaculty)),
-          const SizedBox(width: 14),
-          Expanded(child: actionCard(Icons.add_business_outlined, 'Add program', 'Register a program under a faculty and level.', showCreateProgram)),
-        ]),
-          const SizedBox(height: 22),
+      child: ListView(
+        padding: const EdgeInsets.all(22),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(22),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0F172A),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CircleAvatar(
+                  radius: 24,
+                  backgroundColor: Color(0xFF1E293B),
+                  child: Icon(
+                    Icons.admin_panel_settings_outlined,
+                    color: Colors.white,
+                    size: 26,
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'SUPER ADMIN CONTROL CENTER',
+                        style: TextStyle(
+                          color: Color(0xFF94A3B8),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Welcome back, $displayName',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Manage CampusCore from one central place.',
+                        style: TextStyle(color: Color(0xFFCBD5E1)),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          const _Heading(
+            'People & access',
+            'Current users in the CampusCore system.',
+          ),
+          const SizedBox(height: 12),
+          _metricGrid([
+            _Metric('Total users', s.totalUsers, Icons.people_outline),
+            _Metric('Students', s.students, Icons.school_outlined),
+            _Metric('Lecturers', s.lecturers, Icons.co_present_outlined),
+          ]),
+
+          const SizedBox(height: 24),
+          const _Heading(
+            'Academic structure',
+            'Core academic records currently connected to the database.',
+          ),
+          const SizedBox(height: 12),
+          _metricGrid([
+            _Metric('Faculties', s.faculties, Icons.domain_outlined),
+            _Metric('Programs', s.programs, Icons.account_tree_outlined),
+            _Metric('Course units', s.courseUnits, Icons.menu_book_outlined),
+          ]),
+
+          const SizedBox(height: 24),
+          const _Heading(
+            'Academic calendar',
+            'Configured academic periods in the system.',
+          ),
+          const SizedBox(height: 12),
+          _metricGrid([
+            _Metric('Academic years', s.academicYears, Icons.calendar_month_outlined),
+            _Metric('Semesters', s.semesters, Icons.event_note_outlined),
+          ]),
+
+          const SizedBox(height: 24),
+          const _Heading(
+            'Quick actions',
+            'Common administration tasks.',
+          ),
+          const SizedBox(height: 12),
+          LayoutBuilder(
+            builder: (_, constraints) {
+              final stacked = constraints.maxWidth < 680;
+              final facultyAction = actionCard(
+                Icons.domain_add_outlined,
+                'Add faculty',
+                'Create a faculty in the live database.',
+                showCreateFaculty,
+              );
+              final programAction = actionCard(
+                Icons.add_business_outlined,
+                'Add program',
+                'Register a program under a faculty and level.',
+                showCreateProgram,
+              );
+
+              if (stacked) {
+                return Column(
+                  children: [
+                    facultyAction,
+                    const SizedBox(height: 12),
+                    programAction,
+                  ],
+                );
+              }
+
+              return Row(
+                children: [
+                  Expanded(child: facultyAction),
+                  const SizedBox(width: 12),
+                  Expanded(child: programAction),
+                ],
+              );
+            },
+          ),
+
+          const SizedBox(height: 24),
           listCard(
-            'Programs in the database',
+            'Programs',
             programs.isEmpty
-                ? const Text('No programs yet.')
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Text('No programs have been created yet.'),
+                  )
                 : Column(
                     children: programs.take(6).map((program) {
                       return ListTile(
-                        contentPadding: EdgeInsets.zero,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 2),
+                        leading: CircleAvatar(
+                          backgroundColor: const Color(0xFFEFF6FF),
+                          child: Text(
+                            program.code.length >= 2
+                                ? program.code.substring(0, 2)
+                                : program.code,
+                          ),
+                        ),
                         title: Text(
-                          '${program.code} — ${program.name}',
+                          program.name,
                           style: const TextStyle(fontWeight: FontWeight.w700),
                         ),
                         subtitle: Text(
-                          '${program.faculty.code} • ${program.level.code} • ${program.durationYears} years',
+                          '${program.code}  |  ${program.faculty.code}  |  ${program.level.code}',
                         ),
                       );
                     }).toList(),
                   ),
           ),
-      ]),
+        ],
+      ),
     );
   }
 
+  Widget _metricGrid(List<_Metric> metrics) {
+    return LayoutBuilder(
+      builder: (_, constraints) {
+        final columns = constraints.maxWidth >= 1050
+            ? 3
+            : constraints.maxWidth >= 520
+                ? 2
+                : 1;
+        final gap = 12.0;
+        final width = (constraints.maxWidth - (gap * (columns - 1))) / columns;
+
+        return Wrap(
+          spacing: gap,
+          runSpacing: gap,
+          children: metrics
+              .map(
+                (metric) => SizedBox(
+                  width: width,
+                  child: metricCard(metric),
+                ),
+              )
+              .toList(),
+        );
+      },
+    );
+  }
   Widget academicStructure() => ListView(padding: const EdgeInsets.all(22), children: [
     Row(children: [const Expanded(child: _Heading('Academic structure', 'Faculties and programs stored in Django.')), FilledButton.icon(onPressed: showCreateProgram, icon: const Icon(Icons.add), label: const Text('New program'))]),
     const SizedBox(height: 18),
