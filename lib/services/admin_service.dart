@@ -95,6 +95,170 @@ class AdminService {
     }
   }
 
+  Future<Map<String, dynamic>> _put(
+    String path, {
+    required Map<String, dynamic> body,
+  }) async {
+    var session = await _requireSession();
+
+    try {
+      return await _apiClient.put(
+        path,
+        headers: {'Authorization': 'Bearer ${session.accessToken}'},
+        body: body,
+      );
+    } on ApiException catch (e) {
+      if (e.statusCode != 401) rethrow;
+      session = await _refreshSession(session);
+      return _apiClient.put(
+        path,
+        headers: {'Authorization': 'Bearer ${session.accessToken}'},
+        body: body,
+      );
+    }
+  }
+
+  Future<Map<String, dynamic>> _patch(
+    String path, {
+    required Map<String, dynamic> body,
+  }) async {
+    var session = await _requireSession();
+
+    try {
+      return await _apiClient.patch(
+        path,
+        headers: {'Authorization': 'Bearer ${session.accessToken}'},
+        body: body,
+      );
+    } on ApiException catch (e) {
+      if (e.statusCode != 401) rethrow;
+      session = await _refreshSession(session);
+      return _apiClient.patch(
+        path,
+        headers: {'Authorization': 'Bearer ${session.accessToken}'},
+        body: body,
+      );
+    }
+  }
+
+  Future<Map<String, dynamic>> _delete(String path) async {
+    var session = await _requireSession();
+
+    try {
+      return await _apiClient.delete(
+        path,
+        headers: {'Authorization': 'Bearer ${session.accessToken}'},
+      );
+    } on ApiException catch (e) {
+      if (e.statusCode != 401) rethrow;
+      session = await _refreshSession(session);
+      return _apiClient.delete(
+        path,
+        headers: {'Authorization': 'Bearer ${session.accessToken}'},
+      );
+    }
+  }
+
+  Future<List<AdminStudent>> getStudents({String search = ''}) async {
+    final query = search.trim();
+    final path = query.isEmpty
+        ? '/admin/students/'
+        : '/admin/students/?search=${Uri.encodeQueryComponent(query)}';
+
+    final response = await _get(path);
+    final items = response['items'];
+
+    if (items is! List) {
+      throw const ApiException('Invalid students response.');
+    }
+
+    return items
+        .whereType<Map<String, dynamic>>()
+        .map(AdminStudent.fromJson)
+        .toList();
+  }
+
+  Future<AdminStudent> createStudent({
+    required String email,
+    required String firstName,
+    required String lastName,
+    required String phone,
+    required String admissionNumber,
+    int? programId,
+    required String gender,
+    required String nationality,
+    int? enrollmentYear,
+    required String session,
+    required String parentContact,
+    required int yearOfStudy,
+    required String password,
+  }) async {
+    final response = await _post(
+      '/admin/students/',
+      body: {
+        'email': email,
+        'first_name': firstName,
+        'last_name': lastName,
+        'phone': phone,
+        'admission_number': admissionNumber,
+        if (programId != null) 'program_id': programId,
+        'gender': gender,
+        'nationality': nationality,
+        if (enrollmentYear != null) 'enrollment_year': enrollmentYear,
+        'session': session,
+        'parent_contact': parentContact,
+        'year_of_study': yearOfStudy,
+        'password': password,
+      },
+    );
+
+    return AdminStudent.fromJson(response);
+  }
+
+  Future<AdminStudent> updateStudent({
+    required int id,
+    required String email,
+    required String firstName,
+    required String lastName,
+    required String phone,
+    required String admissionNumber,
+    int? programId,
+    required String gender,
+    required String nationality,
+    int? enrollmentYear,
+    required String session,
+    required String parentContact,
+    required int yearOfStudy,
+    String? password,
+  }) async {
+    final body = <String, dynamic>{
+      'email': email,
+      'first_name': firstName,
+      'last_name': lastName,
+      'phone': phone,
+      'admission_number': admissionNumber,
+      'program_id': programId,
+      'gender': gender,
+      'nationality': nationality,
+      'enrollment_year': enrollmentYear,
+      'session': session,
+      'parent_contact': parentContact,
+      'year_of_study': yearOfStudy,
+    };
+
+    if (password != null && password.trim().isNotEmpty) {
+      body['password'] = password.trim();
+    }
+
+    return AdminStudent.fromJson(
+      await _patch('/admin/students/$id/', body: body),
+    );
+  }
+
+  Future<void> deactivateStudent(int id) async {
+    await _delete('/admin/students/$id/');
+  }
+
   Future<AdminDashboardStats> getDashboard() async =>
       AdminDashboardStats.fromJson(await _get('/admin/dashboard/'));
 
