@@ -96,9 +96,7 @@ class _StudentsAdminScreenState extends State<StudentsAdminScreen> {
       builder: (dialogContext) => AlertDialog(
         title: const Text('Deactivate student?'),
         content: Text(
-          'This will deactivate ' +
-              student.fullName +
-              '\'s account. The student record will remain in the database.',
+          '${student.fullName} will be deactivated. The student record will remain in the database.',
         ),
         actions: [
           TextButton(
@@ -217,7 +215,7 @@ class _StudentsAdminScreenState extends State<StudentsAdminScreen> {
             try {
               if (editing) {
                 await _service.updateStudent(
-                  id: student!.id,
+                  id: student.id,
                   email: email.text.trim(),
                   firstName: firstName.text.trim(),
                   lastName: lastName.text.trim(),
@@ -307,7 +305,7 @@ class _StudentsAdminScreenState extends State<StudentsAdminScreen> {
                             .map(
                               (p) => DropdownMenuItem<int>(
                                 value: p.id,
-                                child: Text(p.code + ' - ' + p.name),
+                                child: Text('${p.code} - ${p.name}'),
                               ),
                             )
                             .toList(),
@@ -481,7 +479,7 @@ class _StudentsAdminScreenState extends State<StudentsAdminScreen> {
           LayoutBuilder(
             builder: (_, constraints) {
               final narrow = constraints.maxWidth < 650;
-              final heading = const Column(
+              const heading = Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -520,7 +518,7 @@ class _StudentsAdminScreenState extends State<StudentsAdminScreen> {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Expanded(child: heading),
+                  Expanded(child: heading),
                   const SizedBox(width: 12),
                   FilledButton.icon(
                     onPressed: busy ? null : _addStudent,
@@ -678,7 +676,7 @@ class _StudentsAdminScreenState extends State<StudentsAdminScreen> {
           rows: students.map((student) {
             final program = student.program == null
                 ? 'Not assigned'
-                : student.program!.code + ' - ' + student.program!.name;
+                : '${student.program!.code} - ${student.program!.name}';
 
             return DataRow(
               cells: [
