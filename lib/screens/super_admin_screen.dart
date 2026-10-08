@@ -3,6 +3,7 @@ import '../models/admin_models.dart';
 import '../services/admin_service.dart';
 import '../services/api_client.dart';
 import '../services/auth_storage.dart';
+import 'students_admin_screen.dart';
 
 class SuperAdminScreen extends StatefulWidget {
   const SuperAdminScreen({super.key});
@@ -98,7 +99,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
               tileColor: selected ? const Color(0xFF1E293B) : Colors.transparent,
               leading: Icon(item.icon, color: selected ? Colors.white : const Color(0xFF94A3B8)),
               title: Text(item.title, style: TextStyle(color: selected ? Colors.white : const Color(0xFFCBD5E1), fontWeight: selected ? FontWeight.w700 : FontWeight.w500, fontSize: 13)),
-              trailing: i > 1 ? const Text('SOON', style: TextStyle(color: Color(0xFF64748B), fontSize: 8, fontWeight: FontWeight.w800)) : null,
+              trailing: i > 2 ? const Text('SOON', style: TextStyle(color: Color(0xFF64748B), fontSize: 8, fontWeight: FontWeight.w800)) : null,
               onTap: () => select(i),
             ),
           ); },
@@ -115,6 +116,12 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
     if (loading && stats == null) return const Center(child: CircularProgressIndicator());
     if (error != null && stats == null) return errorView();
     if (section == 1) return academicStructure();
+    if (section == 2) {
+      return StudentsAdminScreen(
+        programs: programs,
+        onChanged: load,
+      );
+    }
     if (section == 0) return overview();
     return modulePage(items[section].title, items[section].icon, stats!);
   }
