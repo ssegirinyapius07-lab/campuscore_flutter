@@ -518,7 +518,7 @@ class _StudentsAdminScreenState extends State<StudentsAdminScreen> {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(child: heading),
+                  const Expanded(child: heading),
                   const SizedBox(width: 12),
                   FilledButton.icon(
                     onPressed: busy ? null : _addStudent,
