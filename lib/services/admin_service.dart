@@ -95,29 +95,6 @@ class AdminService {
     }
   }
 
-  Future<Map<String, dynamic>> _put(
-    String path, {
-    required Map<String, dynamic> body,
-  }) async {
-    var session = await _requireSession();
-
-    try {
-      return await _apiClient.put(
-        path,
-        headers: {'Authorization': 'Bearer ${session.accessToken}'},
-        body: body,
-      );
-    } on ApiException catch (e) {
-      if (e.statusCode != 401) rethrow;
-      session = await _refreshSession(session);
-      return _apiClient.put(
-        path,
-        headers: {'Authorization': 'Bearer ${session.accessToken}'},
-        body: body,
-      );
-    }
-  }
-
   Future<Map<String, dynamic>> _patch(
     String path, {
     required Map<String, dynamic> body,
