@@ -515,7 +515,7 @@ class _StudentsAdminScreenState extends State<StudentsAdminScreen> {
                 );
               }
 
-              return Row(
+              return const Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(child: heading),
