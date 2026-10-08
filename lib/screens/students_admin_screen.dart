@@ -168,6 +168,9 @@ class _StudentsAdminScreenState extends State<StudentsAdminScreen> {
 
     if (programId == null && activePrograms.isNotEmpty) {
       programId = activePrograms.first.id;
+    } else if (programId != null &&
+        !activePrograms.any((program) => program.id == programId)) {
+      programId = null;
     }
 
     bool dialogBusy = false;
@@ -475,38 +478,58 @@ class _StudentsAdminScreenState extends State<StudentsAdminScreen> {
       child: ListView(
         padding: const EdgeInsets.all(22),
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Expanded(
-                child: Column(
+          LayoutBuilder(
+            builder: (_, constraints) {
+              final narrow = constraints.maxWidth < 650;
+              final heading = const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Students',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    'Manage student accounts and academic information from the live database.',
+                    style: TextStyle(
+                      color: Color(0xFF64748B),
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              );
+
+              if (narrow) {
+                return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Students',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      'Manage student accounts and academic information from the live database.',
-                      style: TextStyle(
-                        color: Color(0xFF64748B),
-                        fontSize: 12,
-                      ),
+                    heading,
+                    const SizedBox(height: 12),
+                    FilledButton.icon(
+                      onPressed: busy ? null : _addStudent,
+                      icon: const Icon(Icons.person_add_alt_1),
+                      label: const Text('Add student'),
                     ),
                   ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              FilledButton.icon(
-                onPressed: busy ? null : _addStudent,
-                icon: const Icon(Icons.person_add_alt_1),
-                label: const Text('Add student'),
-              ),
-            ],
+                );
+              }
+
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Expanded(child: heading),
+                  const SizedBox(width: 12),
+                  FilledButton.icon(
+                    onPressed: busy ? null : _addStudent,
+                    icon: const Icon(Icons.person_add_alt_1),
+                    label: const Text('Add student'),
+                  ),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 18),
           _summary(active, inactive),
