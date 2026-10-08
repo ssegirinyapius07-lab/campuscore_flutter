@@ -54,3 +54,83 @@ class AdminProgram {
     level: AdminProgramLevel.fromJson((json['level'] as Map<String, dynamic>?) ?? {}),
   );
 }
+
+class AdminStudent {
+  const AdminStudent({
+    required this.id,
+    required this.username,
+    required this.email,
+    required this.firstName,
+    required this.lastName,
+    required this.phone,
+    required this.isActive,
+    required this.admissionNumber,
+    required this.program,
+    required this.gender,
+    required this.nationality,
+    required this.enrollmentYear,
+    required this.session,
+    required this.parentContact,
+    required this.yearOfStudy,
+  });
+
+  final int id;
+  final String username;
+  final String email;
+  final String firstName;
+  final String lastName;
+  final String phone;
+  final bool isActive;
+  final String admissionNumber;
+  final AdminStudentProgram? program;
+  final String gender;
+  final String nationality;
+  final int? enrollmentYear;
+  final String session;
+  final String parentContact;
+  final int yearOfStudy;
+
+  String get fullName {
+    final name = '$firstName $lastName'.trim();
+    return name.isEmpty ? username : name;
+  }
+
+  factory AdminStudent.fromJson(Map<String, dynamic> json) => AdminStudent(
+    id: (json['id'] as num?)?.toInt() ?? 0,
+    username: json['username'] as String? ?? '',
+    email: json['email'] as String? ?? '',
+    firstName: json['first_name'] as String? ?? '',
+    lastName: json['last_name'] as String? ?? '',
+    phone: json['phone'] as String? ?? '',
+    isActive: json['is_active'] as bool? ?? false,
+    admissionNumber: json['admission_number'] as String? ?? '',
+    program: json['program'] is Map<String, dynamic>
+        ? AdminStudentProgram.fromJson(json['program'] as Map<String, dynamic>)
+        : null,
+    gender: json['gender'] as String? ?? '',
+    nationality: json['nationality'] as String? ?? '',
+    enrollmentYear: (json['enrollment_year'] as num?)?.toInt(),
+    session: json['session'] as String? ?? '',
+    parentContact: json['parent_contact'] as String? ?? '',
+    yearOfStudy: (json['year_of_study'] as num?)?.toInt() ?? 1,
+  );
+}
+
+class AdminStudentProgram {
+  const AdminStudentProgram({
+    required this.id,
+    required this.code,
+    required this.name,
+  });
+
+  final int id;
+  final String code;
+  final String name;
+
+  factory AdminStudentProgram.fromJson(Map<String, dynamic> json) =>
+      AdminStudentProgram(
+        id: (json['id'] as num?)?.toInt() ?? 0,
+        code: json['code'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+      );
+}
